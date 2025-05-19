@@ -6,7 +6,7 @@ A Java console-based application that allows users to dynamically create Java cl
 
 ```
 /src
-  ├── app              → main class and menu system
+  ├── menu              → main class and menu system
   ├── builder          → business logic (core class builder components)
   ├── model            → models representing class elements (Field, Method, etc.)
   ├── util             → file handling, validations, and string helpers
@@ -32,12 +32,12 @@ A Java console-based application that allows users to dynamically create Java cl
 
 1. Compile the project:
 ```
-javac -d out src/model/*.java src/builder/*.java src/util/*.java src/exception/*.java src/app/*.java
+javac -d out src/model/*.java src/builder/*.java src/util/*.java src/exception/*.java src/menu/*.java
 ```
 
 2. Run the application:
 ```
-java -cp out app.Main
+java -cp out Main
 ```
 
 ## Usage

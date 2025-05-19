@@ -149,20 +149,16 @@ public class JavaClassBuilder {
     public void removeImplementsInterface(String interfaceName) {
         implementsInterfaces.remove(interfaceName);
     }
-    
-    /**
-     * Generates the Java code for the class
-     * @return A string containing the Java code
-     */
+
     public String buildClass() {
         StringBuilder sb = new StringBuilder();
         
-        // Package declaration
+
         if (packageName != null && !packageName.isEmpty()) {
             sb.append("package ").append(packageName).append(";\n\n");
         }
         
-        // Import statements
+        // Import
         if (!imports.isEmpty()) {
             for (String importStmt : imports) {
                 sb.append("import ").append(importStmt).append(";\n");
@@ -170,7 +166,7 @@ public class JavaClassBuilder {
             sb.append("\n");
         }
         
-        // Class declaration
+        // Class
         sb.append("/**\n");
         sb.append(" * ").append(className).append("\n");
         sb.append(" */\n");
