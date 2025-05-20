@@ -227,13 +227,7 @@ public class JavaClassBuilder {
         
         // Extends
         if (extendsClass != null && !extendsClass.isEmpty()) {
-            if (isInterface) {
-                // In Java, interfaces can only extend other interfaces
-                sb.append(" extends ").append(extendsClass); // This is allowed, but only if extendsClass is an interface
-                // Optionally, you could add a runtime check here if you have interface/class info
-            } else {
-                sb.append(" extends ").append(extendsClass);
-            }
+            sb.append(" extends ").append(extendsClass);
         }
         
         // Implements

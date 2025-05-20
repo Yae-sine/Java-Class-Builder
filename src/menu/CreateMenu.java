@@ -238,20 +238,7 @@ public class CreateMenu  {
             String extendsName = scanner.nextLine().trim();
             if (!extendsName.isEmpty()) {
                 ValidationUtils.validateClassName(extendsName);
-                if (isInterface) {
-                    // Ask if the user means to extend an interface or a class
-                    System.out.print("You are editing an interface. Is '" + extendsName + "' an interface? (y/n): ");
-                    String isExtendingInterface = scanner.nextLine().trim().toLowerCase();
-                    if (isExtendingInterface.equals("y") || isExtendingInterface.equals("yes")) {
-                        classBuilder.setExtendsClass(extendsName); // In Java, interfaces can extend other interfaces
-                    } else {
-                        System.out.println("Error: An interface cannot extend a class. In Java, interfaces can only extend other interfaces.");
-                        System.out.println("Suggestion: Leave 'Extends' blank or enter an interface name if you want to extend another interface.");
-                        classBuilder.setExtendsClass(null);
-                    }
-                } else {
-                    classBuilder.setExtendsClass(extendsName);
-                }
+                classBuilder.setExtendsClass(extendsName);
             } else {
                 classBuilder.setExtendsClass(null);
             }
