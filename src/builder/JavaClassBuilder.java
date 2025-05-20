@@ -1,11 +1,10 @@
 package builder;
 
+import java.util.ArrayList;
+import java.util.List;
 import model.Constructor;
 import model.Field;
 import model.Method;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Core builder class responsible for creating Java class files
@@ -150,6 +149,47 @@ public class JavaClassBuilder {
         implementsInterfaces.remove(interfaceName);
     }
 
+    public JavaClassBuilder clone() {
+        JavaClassBuilder copy = new JavaClassBuilder(this.className);
+        copy.packageName = this.packageName;
+        // Deep copy fields
+        for (Field f : this.fields) {
+            Field fCopy = new Field(f.getName(), f.getType(), f.getVisibility());
+            fCopy.setFinal(f.isFinal());
+            fCopy.setStatic(f.isStatic());
+            fCopy.setInitialValue(f.getInitialValue());
+            copy.fields.add(fCopy);
+        }
+        // Deep copy methods
+        for (Method m : this.methods) {
+            Method mCopy = new Method(m.getName(), m.getReturnType(), m.getVisibility());
+            mCopy.setStatic(m.isStatic());
+            mCopy.setAbstract(m.isAbstract());
+            mCopy.setBody(m.getBody());
+            for (model.Parameter p : m.getParameters()) {
+                model.Parameter pCopy = new model.Parameter(p.getName(), p.getType(), p.isFinal());
+                mCopy.addParameter(pCopy);
+            }
+            copy.methods.add(mCopy);
+        }
+        // Deep copy constructors
+        for (model.Constructor c : this.constructors) {
+            model.Constructor cCopy = new model.Constructor(c.getName(), c.getVisibility());
+            cCopy.setBody(c.getBody());
+            for (model.Parameter p : c.getParameters()) {
+                model.Parameter pCopy = new model.Parameter(p.getName(), p.getType(), p.isFinal());
+                cCopy.addParameter(pCopy);
+            }
+            copy.constructors.add(cCopy);
+        }
+        copy.imports = new ArrayList<>(this.imports);
+        copy.isAbstract = this.isAbstract;
+        copy.isInterface = this.isInterface;
+        copy.extendsClass = this.extendsClass;
+        copy.implementsInterfaces = new ArrayList<>(this.implementsInterfaces);
+        return copy;
+    }
+
     public String buildClass() {
         StringBuilder sb = new StringBuilder();
         
@@ -187,7 +227,13 @@ public class JavaClassBuilder {
         
         // Extends
         if (extendsClass != null && !extendsClass.isEmpty()) {
-            sb.append(" extends ").append(extendsClass);
+            if (isInterface) {
+                // In Java, interfaces can only extend other interfaces
+                sb.append(" extends ").append(extendsClass); // This is allowed, but only if extendsClass is an interface
+                // Optionally, you could add a runtime check here if you have interface/class info
+            } else {
+                sb.append(" extends ").append(extendsClass);
+            }
         }
         
         // Implements
@@ -227,4 +273,4 @@ public class JavaClassBuilder {
         
         return sb.toString();
     }
-} 
+}

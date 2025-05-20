@@ -1,15 +1,12 @@
 package menu;
 
-import util.FileManager;
-
 import builder.JavaClassBuilder;
 import builder.JavaClassScan;
-
-import model.Field;
-import model.Method;
-
 import java.io.File;
 import java.util.Scanner;
+import model.Field;
+import model.Method;
+import util.FileManager;
 
 public class Menu implements ConsoleDisplay  {
     private final Scanner scanner;
@@ -49,34 +46,106 @@ public class Menu implements ConsoleDisplay  {
     }
 
     private void printMenu() {
-        System.out.println("\n╔══════════════════════════════════════════╗");
-        System.out.println("║              Menu Principal              ║");
-        System.out.println("╠══════════════════════════════════════════╣");
-        System.out.println("║ 1. Create new class/interface            ║");
-        System.out.println("║ 2. Read (display) a class                ║");
-        System.out.println("║ 3. Modify an existing class              ║");
-        System.out.println("║ 4. Delete a class file                   ║");
-        System.out.println("║ 5. Exit                                  ║");
-        System.out.println("╚══════════════════════════════════════════╝");
+        System.out.println("\n╔════════════════════════════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║                                 Menu Principal                                             ║");
+        System.out.println("╠════════════════════════════════════════════════════════════════════════════════════════════╣");
+        System.out.println("║ 1. Create new class/interface                                                              ║");
+        System.out.println("║ 2. Read (display) a class                                                                  ║");
+        System.out.println("║ 3. Modify an existing class                                                                ║");
+        System.out.println("║ 4. Delete a class file                                                                     ║");
+        System.out.println("║ 5. Exit                                                                                    ║");
+        System.out.println("╚════════════════════════════════════════════════════════════════════════════════════════════╝");
         System.out.print("Enter your choice: ");
     }
 
+    // --- Syntax Highlighting for Java code preview ---
+    private String highlightJava(String code) {
+        // Basic ANSI color codes
+        final String RESET = "\u001B[0m";
+        final String KEYWORD = "\u001B[34m"; // Blue
+        final String TYPE = "\u001B[36m";    // Cyan
+        final String STRING = "\u001B[32m";  // Green
+        final String COMMENT = "\u001B[90m"; // Bright black
+
+        // Highlight keywords, types, and comments (very basic)
+        String[] keywords = {"public", "private", "protected", "class", "interface", "abstract", "static", "final", "void", "extends", "implements", "return", "new"};
+        String[] types = {"int", "long", "short", "byte", "float", "double", "boolean", "char", "String"};
+        String highlighted = code;
+        // Comments (single-line)
+        highlighted = highlighted.replaceAll("(?m)//.*$", COMMENT + "$0" + RESET);
+        // Comments (multi-line)
+        highlighted = highlighted.replaceAll("(?s)/\\*.*?\\*/", COMMENT + "$0" + RESET);
+        // Strings
+        highlighted = highlighted.replaceAll("\"([^\"]*)\"", STRING + "\"$1\"" + RESET);
+        // Keywords
+        for (String kw : keywords) {
+            highlighted = highlighted.replaceAll("\\b" + kw + "\\b", KEYWORD + kw + RESET);
+        }
+        // Types
+        for (String t : types) {
+            highlighted = highlighted.replaceAll("\\b" + t + "\\b", TYPE + t + RESET);
+        }
+        return highlighted;
+    }
+
+    private void showInheritanceTree(JavaClassBuilder classBuilder) {
+        System.out.println("\n╔══════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║                        Inheritance Tree                            ║");
+        System.out.println("╠══════════════════════════════════════════════════════════════════════╣");
+        // Top node: class name
+        System.out.printf("║   %s\n", classBuilder.getClassName());
+        // Extends
+        if (classBuilder.getExtendsClass() != null && !classBuilder.getExtendsClass().isEmpty()) {
+            System.out.println("║   │");
+            System.out.printf("║   └── extends: %s\n", classBuilder.getExtendsClass());
+        }
+        // Implements
+        if (!classBuilder.getImplementsInterfaces().isEmpty()) {
+            System.out.println("║   │");
+            System.out.print ("║   └── implements: ");
+            int count = 0;
+            for (String iface : classBuilder.getImplementsInterfaces()) {
+                if (count > 0) System.out.print(", ");
+                System.out.print(iface);
+                count++;
+                if (count % 3 == 0 && count < classBuilder.getImplementsInterfaces().size()) {
+                    System.out.print("\n║                      ");
+                }
+            }
+            System.out.println();
+        }
+        System.out.println("╚══════════════════════════════════════════════════════════════════════╝\n");
+    }
+
+    private void displayClassPreview(String code) {
+        System.out.println("\n╔══════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║                          Class Preview                             ║");
+        System.out.println("╠══════════════════════════════════════════════════════════════════════╣");
+        String[] lines = code.split("\n");
+        int lineNumWidth = String.valueOf(lines.length).length();
+        for (int i = 0; i < lines.length; i++) {
+            System.out.printf("║ %" + lineNumWidth + "d | %s\n", i + 1, highlightJava(lines[i]));
+        }
+        System.out.println("╚══════════════════════════════════════════════════════════════════════╝\n");
+    }
+
     private void readClass() {
-        System.out.print("Enter class name to read: ");
+        System.out.print("\nEnter class name to read: ");
         String className = scanner.nextLine().trim();
         File classFile = new File(folderPath, className + ".java");
 
         if (!classFile.exists()) {
-            System.out.println("Class file does not exist.");
+            System.out.println("Class file does not exist.\n");
             return;
         }
 
         try {
             String content = FileManager.readFile(classFile.getAbsolutePath());
             JavaClassBuilder builder = JavaClassScan.scan(content);
-            displayClass(builder);
+            showInheritanceTree(builder);
+            displayClassPreview(builder.buildClass());
         } catch (Exception e) {
-            System.out.println("Error reading or parsing class file: " + e.getMessage());
+            System.out.println("Error reading class: " + e.getMessage());
         }
     }
 
@@ -165,7 +234,7 @@ public class Menu implements ConsoleDisplay  {
             if (m.isAbstract()) methodLine.append("abstract ").append(" ");
             if (m.isStatic()) methodLine.append("static ").append(" ");
             methodLine.append(m.getReturnType() == null ? "void" : m.getReturnType()).append(" ");
-            methodLine.append(m.getName() == "" ? "" : m.getName());
+            methodLine.append(m.getName() == null || m.getName().equals("") ? "" : m.getName());
             methodLine.append("(");
             String params = m.getParameters().stream()
                     .map(p -> (p.isFinal() ? "final " : "") + p.getType() + " " + p.getName())
