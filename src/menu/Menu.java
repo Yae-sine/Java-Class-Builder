@@ -119,7 +119,7 @@ public class Menu implements ConsoleDisplay  {
 
     private void displayClassPreview(String code) {
         System.out.println("\n╔══════════════════════════════════════════════════════════════════════╗");
-        System.out.println("║                          Class Preview                             ║");
+        System.out.println("║                          Class Preview                               ║");
         System.out.println("╠══════════════════════════════════════════════════════════════════════╣");
         String[] lines = code.split("\n");
         int lineNumWidth = String.valueOf(lines.length).length();

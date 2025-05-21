@@ -1,55 +1,81 @@
-# ClassBuilder
+# Java Class Builder
 
-A Java console-based application that allows users to dynamically create Java class files by inputting the class name, attributes, constructors, methods, and to manage them programmatically.
-
-## Project Structure
-
-```
-/src
-  ├── menu              → main class and menu system
-  ├── builder          → business logic (core class builder components)
-  ├── model            → models representing class elements (Field, Method, etc.)
-  ├── util             → file handling, validations, and string helpers
-  └── exception        → custom exceptions
-```
+A powerful, interactive console-based application for designing, visualizing, and generating Java classes, interfaces, and inheritance structures. Ideal for students, educators, and developers who want to quickly prototype or refactor Java code with live feedback and robust validation.
 
 ## Features
 
-- Create new Java classes with attributes, methods, and constructors
-- Define visibility, types, and modifiers for all elements
-- Generate properly formatted Java source code
-- Save class files to disk
+- **Interactive Console UI**
+  - Modern, clear menus with box drawing, line numbers, and sectioning
+  - Welcome and exit banners for a polished user experience
 
-## How to Run
+- **Class & Interface Creation**
+  - Create Java classes and interfaces with fields, methods, and constructors
+  - Add, edit, or remove fields, methods, and parameters
+  - Supports inheritance (extends/implements) with live validation
+  - Prevents interfaces from extending classes (enforces Java rules)
 
-### Using PowerShell Script (Windows)
+- **Undo/Redo Functionality**
+  - Instantly revert or reapply changes using stack-based snapshots
+  - Unlimited undo/redo during a session
 
-```
-.\build.ps1
-```
+- **Live Preview & Syntax Highlighting**
+  - See a real-time, syntax-highlighted preview of your Java class as you build
+  - Boxed, line-numbered, and color-formatted output for easy reading
 
-### Manually
+- **Input Validation & Error Feedback**
+  - Detailed feedback for invalid names, types, or Java rule violations
+  - Duplicate detection for class, field, and method names (at input and before saving)
 
-1. Compile the project:
-```
-javac -d out src/model/*.java src/builder/*.java src/util/*.java src/exception/*.java src/menu/*.java
-```
+- **Inheritance Visualization**
+  - Vertical, node-based tree view of class/interface inheritance
+  - Handles multiple interfaces and complex hierarchies
 
-2. Run the application:
-```
-java -cp out Main
-```
+- **Refactoring Tools**
+  - Rename fields, methods, or classes
+  - Change types or method signatures on the fly
 
-## Usage
+- **Project & File Management**
+  - Choose or create a working folder for your Java files
+  - Save generated classes/interfaces directly to disk
 
-The application presents a menu-driven interface:
+- **Robust Utility Layer**
+  - Modular codebase with clear separation (model, builder, menu, util, exception)
+  - Utility classes for file management, validation, and formatting
 
-1. Create new class
-2. Add attribute
-3. Add method
-4. Add constructor
-5. Display class preview
-6. Save class to file
-7. Exit
+- **Error Handling**
+  - Custom exceptions for invalid names and duplicate elements
+  - Clear, actionable error messages throughout the UI
 
-Follow the prompts to build your Java class. When finished, you can preview the code and save it to a file. 
+- **Ready for Extension**
+  - Easily add new features or extend existing ones thanks to clean architecture
+
+## Getting Started
+
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/yourusername/JavaClassBuilder.git
+   ```
+2. **Compile the project:**
+   ```sh
+   javac -d bin src/**/*.java
+   ```
+3. **Run the application:**
+   ```sh
+   java -cp bin Main
+   ```
+
+## Who is it for?
+- Java learners and students
+- Educators teaching OOP and Java basics
+- Developers prototyping or refactoring Java code
+
+## Contributing
+Pull requests and suggestions are welcome! Please open an issue to discuss your ideas or report bugs.
+
+## License
+MIT License
+
+---
+
+### Short GitHub Description
+
