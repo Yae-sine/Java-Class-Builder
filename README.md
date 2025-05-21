@@ -74,8 +74,3 @@ Pull requests and suggestions are welcome! Please open an issue to discuss your 
 
 ## License
 MIT License
-
----
-
-### Short GitHub Description
-
